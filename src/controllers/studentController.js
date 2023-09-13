@@ -1,13 +1,13 @@
-const Student = require('../models/studentModel');
+const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 async function studentLogin(req, res) {
-  const { universityID, password } = req.body;
+  const { universityID, password,role } = req.body;
 
   try {
-    const student = await Student.findOne({ universityID });
-    const userRole = 'student';
+    const student = await User.findOne({ universityID, role });
+    console.log(student)
 
     if (!student) {
       return res.status(401).json({ message: 'Invalid credentials' });

@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 const deanSessionController = require('../controllers/deanSessionController');
 const verifyToken = require('../utils/auth');
-const Dean = require('../models/deanModel')
+const User = require('../models/userModel')
 
 async function verifyDean(req, res, next) {
-  const dean = await Dean.findOne({ _id:req.user.id });
-    if (dean) {
+  const user = await User.findOne({ _id:req.user.id });
+    if (user.role === "dean") {
       return next();
     }
     res.status(403).json({ message: 'Access denied. Only deans are allowed.' });

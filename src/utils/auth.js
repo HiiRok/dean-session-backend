@@ -2,38 +2,27 @@ const jwt = require('jsonwebtoken');
 
 function verifyToken(req, res, next) {
   const token = req.header('Authorization');
+  let tokenWithoutBearer="";
 
-  const decodedToken = decodeToken(token);
-
-if (decodedToken) {
-  console.log('Decoded Token:', decodedToken);
-} else {
-  console.log('Token decoding failed.');
-}
+  if (token && token.startsWith('Bearer ')) {
+    tokenWithoutBearer = token.substring(7); 
+    console.log(tokenWithoutBearer);
+  } else {
+    console.error('Invalid or missing Bearer token');
+  }
 
 
   if (!token) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
 
-  jwt.verify(token,"dog", (err, decoded) => {
+  jwt.verify(tokenWithoutBearer,"dog", (err, decoded) => {
     if (err) {
       return res.status(403).json({ message: 'Invalid token' });
     }
     req.user = decoded;
     next();
   });
-}
-
-
-function decodeToken(token) {
-  try {
-    const decoded = jwt.decode(token);
-    return decoded;
-  } catch (error) {
-    console.error('Error decoding token:', error);
-    return null;
-  }
 }
 
 

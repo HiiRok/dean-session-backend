@@ -1,11 +1,10 @@
-const DeanSession = require('../models/deanSessionModel');
-const Student = require('../models/studentModel');
-const Dean = require('../models/deanModel');
+const Session = require('../models/deanSessionModel');
+const User = require('../models/userModel');
 
 async function listPendingDeanSessions(req, res) {
   const deanID = req.user.id; // Extracted from JWT token
   try {
-    const pendingSessions = await DeanSession.find({
+    const pendingSessions = await Session.find({
       deanID,
       status: 'pending',
       sessionTime: { $gte: new Date() }, // Ensure the session is in the future
@@ -21,7 +20,7 @@ async function listPendingDeanSessions(req, res) {
 
 async function listAvailableDeanSessions(req, res) {
   try {
-    const availableSessions = await DeanSession.find({ status: 'available' });
+    const availableSessions = await Session.find({ status: 'available' });
     res.json(availableSessions);
   } catch (error) {
     console.error(error);
@@ -31,11 +30,11 @@ async function listAvailableDeanSessions(req, res) {
 
 
 async function bookDeanSession(req, res) {
-  const studentID = req.user.id; // Extracted from JWT token
+  const studentID = req.user.id; 
   const { sessionTime } = req.body;
 
   try {
-    const session = await DeanSession.findOne({ sessionTime, status: 'available' });
+    const session = await Session.findOne({ sessionTime, status: 'available' });
 
     if (!session) {
       return res.status(400).json({ message: 'Session not available for booking' });

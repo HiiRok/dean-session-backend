@@ -1,13 +1,12 @@
-const Dean = require('../models/deanModel');
+const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 async function deanLogin(req, res) {
   const { universityID, password } = req.body;
-  const userRole = 'dean';
 
   try {
-    const dean = await Dean.findOne({ universityID });
+    const dean = await User.findOne({ universityID,role:"dean" });
 
     if (!dean) {
       return res.status(401).json({ message: 'Invalid credentials' });
